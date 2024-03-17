@@ -48,7 +48,11 @@ async function seedRecipes(client) {
           id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
           name VARCHAR(255) NOT NULL,
           introduction JSON,
-          link VARCHAR(255)
+          link VARCHAR(255),
+          created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+          image VARCHAR(255),
+          views INT DEFAULT 0,
+          parve VARCHAR(20)
         );
       `;
 
@@ -58,8 +62,8 @@ async function seedRecipes(client) {
         const insertedRecipes = await Promise.all(
             recipes.map(async (recipe) => {
                 return client.sql`
-                    INSERT INTO recipes (id, name, introduction)
-                    VALUES (${recipe.id}, ${recipe.name}, ${recipe.introduction})
+                    INSERT INTO recipes (id, name, introduction, link, image, parve)
+                    VALUES (${recipe.id}, ${recipe.name}, ${recipe.introduction}, ${recipe.link}, ${recipe.image}, ${recipe.parve})
                     ON CONFLICT (id) DO NOTHING;
                     `;
             }),
@@ -121,7 +125,8 @@ async function seedProducts(client) {
         const createTable = await client.sql`
         CREATE TABLE IF NOT EXISTS products (
             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-            name VARCHAR(255) NOT NULL
+            name VARCHAR(255) NOT NULL,
+            show_in_list INT DEFAULT 1
         );
       `;
 
@@ -131,8 +136,8 @@ async function seedProducts(client) {
         const inserted = await Promise.all(
             products.map(async (cat) => {
                 return client.sql`
-                    INSERT INTO products (id, name)
-                    VALUES (${cat.id}, ${cat.name})
+                    INSERT INTO products (id, name, show_in_list)
+                    VALUES (${cat.id}, ${cat.name}, ${cat.show_in_list})
                     ON CONFLICT (id) DO NOTHING;
                 `;
             }),
@@ -285,6 +290,7 @@ async function main() {
     await seedRecipesProducts(client);
     await seedUsers(client);
     await seedMenus(client);
+    await seedMenusRecipes(client);
 
     await client.end();
 }
