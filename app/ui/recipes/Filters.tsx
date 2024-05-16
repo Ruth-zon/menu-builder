@@ -1,6 +1,4 @@
-"use client";
-
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -10,6 +8,7 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
+import { fetchCategoryNames } from "@/app/lib/recipesActions";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -17,25 +16,18 @@ const sortOptions = [
   { name: "Newest", href: "#", current: false },
 ];
 
-const subCategories = [
-  { name: "Totes", href: "#" },
-  { name: "Backpacks", href: "#" },
-  { name: "Travel Bags", href: "#" },
-  { name: "Hip Bags", href: "#" },
-  { name: "Laptop Sleeves", href: "#" },
+const subCategories: { name: string; href: string }[] = [
+  // { name: "Totes", href: "#" },
+  // { name: "Backpacks", href: "#" },
+  // { name: "Travel Bags", href: "#" },
+  // { name: "Hip Bags", href: "#" },
+  // { name: "Laptop Sleeves", href: "#" },
 ];
 const filters = [
   {
     id: "category",
     name: "קטגוריה",
-    options: [
-      { value: "white", label: "White", checked: false },
-      { value: "beige", label: "Beige", checked: false },
-      { value: "blue", label: "Blue", checked: true },
-      { value: "brown", label: "Brown", checked: false },
-      { value: "green", label: "Green", checked: false },
-      { value: "purple", label: "Purple", checked: false },
-    ],
+    options: [],
   },
   {
     id: "parve",
@@ -64,18 +56,22 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Filters({ children }: { children: React.ReactNode }) {
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+export default async function Filters({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const categories = await fetchCategoryNames();
 
   return (
     <div className="bg-white">
       <div>
         {/* Mobile filter dialog */}
-        <Transition.Root show={mobileFiltersOpen} as={Fragment}>
+        <Transition.Root as={Fragment}>
           <Dialog
             as="div"
             className="relative z-40 lg:hidden"
-            onClose={setMobileFiltersOpen}
+            onClose={() => {}}
           >
             <Transition.Child
               as={Fragment}
@@ -107,7 +103,7 @@ export default function Filters({ children }: { children: React.ReactNode }) {
                     <button
                       type="button"
                       className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
-                      onClick={() => setMobileFiltersOpen(false)}
+                      onClick={() => {}}
                     >
                       <span className="sr-only">סגור תפריט</span>
                       <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -256,7 +252,7 @@ export default function Filters({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
-                onClick={() => setMobileFiltersOpen(true)}
+                onClick={() => {}}
               >
                 <span className="sr-only">סנן לפי</span>
                 <FunnelIcon className="h-5 w-5" aria-hidden="true" />

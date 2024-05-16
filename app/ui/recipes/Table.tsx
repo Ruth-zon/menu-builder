@@ -17,8 +17,8 @@ const columns = [
     label: "שם מתכון",
   },
   {
-    key: "link",
-    label: "אתר",
+    key: "creator",
+    label: "יוצר",
   },
   {
     key: "categories",

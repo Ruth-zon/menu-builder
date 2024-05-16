@@ -6,11 +6,11 @@ import Table from "@/app/ui/recipes/Table";
 export default function Home() {
   return (
     <div>
-      <Filters>
-        <Suspense fallback={<div>loading</div>}>
+      <Suspense fallback={<div>loading</div>}>
+        <Filters>
           <Table query="" currentPage={1} />
-        </Suspense>
-      </Filters>
+        </Filters>
+      </Suspense>
     </div>
   );
 }

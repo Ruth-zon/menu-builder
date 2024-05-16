@@ -52,7 +52,8 @@ async function seedRecipes(client) {
           created_at timestamp DEFAULT CURRENT_TIMESTAMP,
           image VARCHAR(255),
           views INT DEFAULT 0,
-          parve VARCHAR(20)
+          parve VARCHAR(20),
+          creator VARCHAR(255)
         );
       `;
 
@@ -62,8 +63,8 @@ async function seedRecipes(client) {
         const insertedRecipes = await Promise.all(
             recipes.map(async (recipe) => {
                 return client.sql`
-                    INSERT INTO recipes (id, name, introduction, link, image, parve)
-                    VALUES (${recipe.id}, ${recipe.name}, ${recipe.introduction}, ${recipe.link}, ${recipe.image}, ${recipe.parve})
+                    INSERT INTO recipes (id, name, introduction, link, image, parve, creator)
+                    VALUES (${recipe.id}, ${recipe.name}, ${recipe.introduction}, ${recipe.link}, ${recipe.image}, ${recipe.parve}, ${recipe.creator})
                     ON CONFLICT (id) DO NOTHING;
                     `;
             }),

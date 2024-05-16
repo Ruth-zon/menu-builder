@@ -16,7 +16,12 @@ export async function fetchFilteredRecipes(query: string, currentPage: number) {
     r.name,
     r.introduction,
     r.link,
-    string_agg(c.name, ', ') AS categories
+    r.creator,
+    string_agg(c.name, ', ') AS categories,
+    case when 
+      r.creator is null then substring(link from '.*://([^/]*)')
+      else r.creator 
+      end as creator
     FROM recipes r
     LEFT JOIN categories_recipes cr ON r.id = cr.recipe_id
     LEFT JOIN categories c ON cr.category_id = c.id
@@ -32,6 +37,18 @@ export async function fetchFilteredRecipes(query: string, currentPage: number) {
   }
 }
 
+export async function fetchCategoryNames() {
+  noStore();
+  try {
+    const categories = await sql<{name: string, id: string}[]>`
+      SELECT id, name from categories;
+    `
+    return categories.rows;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch recipe.");
+  }
+}
 
 /*
 
